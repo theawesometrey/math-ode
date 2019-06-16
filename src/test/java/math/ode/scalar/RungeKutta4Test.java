@@ -1,4 +1,4 @@
-package math.ode;
+package math.ode.scalar;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -9,11 +9,11 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class RungeKuttaAdaptiveTest {
+public class RungeKutta4Test {
 
     @DataProvider
     public Object[][] createSolveTests() {
-        return new Object[][] {
+        return new Object[][]{
                 {(BiFunction<Double, Double, Double>) (x, t) -> t,
                         (Function<Double, Double>) (t) -> t * t / 2.0,
                         8.0, -4.0},
@@ -26,16 +26,14 @@ public class RungeKuttaAdaptiveTest {
         };
     }
 
-    @Test(dataProvider="createSolveTests")
+    @Test(dataProvider = "createSolveTests")
     public void testSolution(BiFunction<Double, Double, Double> dx, Function<Double, Double> xExp, double xi, double ti) {
-        Function<Double, Double> xAct = RungeKuttaAdaptive.Builder.getInstance()
-                .setLocalTruncationError(1e-12)
-                .setInitialStepSize(0.03)
-                .setMaximumTries(100)
-                .setSafetyFactor1(0.9)
-                .setSafetyFactor2(4.0)
+        // Compute the actual position function
+        Function<Double, Double> xAct = RungeKutta4.Builder.getInstance()
+                .setStepSize(0.009)
                 .build()
                 .solution(dx, xi, ti);
+        // Assert that the actual matches the expected
         for (double time = -10.0; time <= 10.0; time += 1.0) {
             double expected = xExp.apply(time);
             double actual = xAct.apply(time);
@@ -64,16 +62,16 @@ public class RungeKuttaAdaptiveTest {
                 .toArray(Object[][]::new);
     }
 
-    @Test(dataProvider="createMotionTests")
+    @Test(dataProvider = "createMotionTests")
     public void testMotion(Function<Double, Double> xExp, double a, double vi, double xi, double ti) {
         // Velocity function
-        Function<Double, Double> v = RungeKuttaAdaptive.Builder.getInstance()
-                .setInitialStepSize(0.1)
+        Function<Double, Double> v = RungeKutta4.Builder.getInstance()
+                .setStepSize(0.1)
                 .build()
                 .solution((vel, t) -> a, vi, ti);
         // Position function
-        Function<Double, Double> x = RungeKuttaAdaptive.Builder.getInstance()
-                .setInitialStepSize(0.1)
+        Function<Double, Double> x = RungeKutta4.Builder.getInstance()
+                .setStepSize(0.1)
                 .build()
                 .solution((xPos, t) -> v.apply(t), xi, ti);
         // Assert that the position function matches the expected

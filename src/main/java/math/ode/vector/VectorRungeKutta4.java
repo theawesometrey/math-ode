@@ -1,11 +1,8 @@
-package math.ode;
+package math.ode.vector;
 
 import java.util.function.BiFunction;
 
-/**
- * 4th Order Runge-Kutta Algorithm.
- */
-public class RungeKutta4 implements FirstOrderODESolver {
+public class VectorRungeKutta4 implements VectorODESolver {
 
     private final double tau;
 
@@ -14,7 +11,7 @@ public class RungeKutta4 implements FirstOrderODESolver {
      *
      * @param builder builder to set the parameters
      */
-    private RungeKutta4(Builder builder) {
+    private VectorRungeKutta4(Builder builder) {
         this.tau = builder.tau;
     }
 
@@ -22,23 +19,24 @@ public class RungeKutta4 implements FirstOrderODESolver {
      * Single step 4th Order Runge-Kutta computation.
      *
      * @param ode right-hand side of first order ode: dx/dt = derivsRK(x, t)
-     * @param x current value of the dependant variable
-     * @param t independent variable
+     * @param x   current value of the dependant variable
+     * @param t   independent variable
      * @param tau step size
      * @return new value of x after step size tau
      */
-    static double rk4(BiFunction<Double, Double, Double> ode, double x, double t, double tau) {
+    static Vector rk4(BiFunction<Vector, Double, Vector> ode, Vector x, double t, double tau) {
         double halfTau = 0.5 * tau;
         double tHalf = t + halfTau;
-        double f1 = ode.apply(x, t);
-        double f2 = ode.apply(x + halfTau * f1, tHalf);
-        double f3 = ode.apply(x + halfTau * f2, tHalf);
-        double f4 = ode.apply(x + tau * f3, t + tau);
-        return x + tau / 6.0 * (f1 + f4 + 2.0 * (f2 + f3));
+        Vector f1 = ode.apply(x, t).immutable();
+        Vector f2 = ode.apply(f1.mult(halfTau).add(x), tHalf).immutable();
+        Vector f3 = ode.apply(f2.mult(halfTau).add(x), tHalf).immutable();
+        Vector f4 = ode.apply(f3.mult(tau).add(x), t + tau).immutable();
+        return f2.add(f3).mult(2.0).add(f1).add(f4).mult(tau / 6.0).add(x);
     }
 
     @Override
-    public double solve(BiFunction<Double, Double, Double> ode, double xi, double ti, double t) {
+    public Vector solve(BiFunction<Vector, Double, Vector> ode, Vector xi, double ti, double t) {
+        xi = xi.immutable();
         double dt = t < ti ? -1.0 * tau : tau;
         final double iterations = (t - ti) / dt;
         for (int i = 0; i < iterations; ++i) {
@@ -86,8 +84,9 @@ public class RungeKutta4 implements FirstOrderODESolver {
          *
          * @return rka instance
          */
-        public RungeKutta4 build() {
-            return new RungeKutta4(this);
+        public VectorRungeKutta4 build() {
+            return new VectorRungeKutta4(this);
         }
     }
+
 }

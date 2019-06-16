@@ -1,13 +1,13 @@
-package math.ode;
+package math.ode.vector;
 
 import java.util.function.BiFunction;
 
-import static math.ode.RungeKutta4.rk4;
+import static math.ode.vector.VectorRungeKutta4.rk4;
 
 /**
  * Adaptive Runge-Kutta Algorithm.
  */
-public class RungeKuttaAdaptive implements FirstOrderODESolver {
+public class VectorRungeKuttaAdaptive implements VectorODESolver {
 
     private static final double EPS = Math.ulp(1.0);
 
@@ -22,7 +22,7 @@ public class RungeKuttaAdaptive implements FirstOrderODESolver {
      *
      * @param builder builder to set the parameters
      */
-    private RungeKuttaAdaptive(Builder builder) {
+    private VectorRungeKuttaAdaptive(Builder builder) {
         this.err = builder.err;
         this.initialTau = builder.initialTau;
         this.maxTry = builder.maxTry;
@@ -31,7 +31,7 @@ public class RungeKuttaAdaptive implements FirstOrderODESolver {
     }
 
     @Override
-    public double solve(BiFunction<Double, Double, Double> ode, double xi, double ti, double t) {
+    public Vector solve(BiFunction<Vector, Double, Vector> ode, Vector xi, double ti, double t) {
         final int sign = t < ti ? -1 : 1;
         double tau = sign * initialTau;
         boolean done = false;
@@ -39,11 +39,13 @@ public class RungeKuttaAdaptive implements FirstOrderODESolver {
             int iTry;
             for (iTry = 1; iTry <= maxTry; ++iTry) {
                 double halfTau = 0.5 * tau;
-                double xSmall = rk4(ode, rk4(ode, xi, ti, halfTau),ti + halfTau, halfTau);
-                double xBig = rk4(ode, xi, ti, tau);
-                double errorRatio = Math.abs(xSmall - xBig) / (err * (Math.abs(xSmall) + Math.abs(xBig)) / 2.0 + EPS);
+                Vector xSmall = rk4(ode, rk4(ode, xi, ti, halfTau), ti + halfTau, halfTau).immutable();
+                Vector xBig = rk4(ode, xi, ti, tau).immutable();
+                double errorRatio = xSmall.sub(xBig).abs()
+                        .div(xSmall.abs().add(xBig.abs()).mult(err / 2.0).add(EPS))
+                        .max();
                 double tauOld = tau;
-                tau = (sign > 0.0)
+                tau = (sign >= 0.0)
                         ? Math.min(Math.max(safe1 * tau * Math.pow(errorRatio, -0.2), tauOld / safe2), safe2 * tauOld)
                         : Math.max(Math.min(safe1 * tau * Math.pow(errorRatio, -0.2), tauOld / safe2), safe2 * tauOld);
                 if (errorRatio < 1.0) {
@@ -153,8 +155,8 @@ public class RungeKuttaAdaptive implements FirstOrderODESolver {
          *
          * @return rka instance
          */
-        public RungeKuttaAdaptive build() {
-            return new RungeKuttaAdaptive(this);
+        public VectorRungeKuttaAdaptive build() {
+            return new VectorRungeKuttaAdaptive(this);
         }
     }
 }
