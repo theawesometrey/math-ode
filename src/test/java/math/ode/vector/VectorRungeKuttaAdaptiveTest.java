@@ -79,7 +79,7 @@ public class VectorRungeKuttaAdaptiveTest {
     public Object[][] createSpringTests() {
         Random rand = new Random();
         rand.setSeed(94789234);
-        final int numTests = 1;
+        final int numTests = 5;
         return IntStream.range(0, numTests)
                 .mapToObj(i -> randomSpringCase(rand))
                 .toArray(Object[][]::new);
@@ -88,18 +88,17 @@ public class VectorRungeKuttaAdaptiveTest {
     @Test(dataProvider = "createSpringTests")
     public void testSpring(Function<Double, Double> xExp, double omega, double xi, double vi, double ti) {
         Vector vxi = Vector.mutable(vi, xi);
-        // Position/Velocity function
-        Function<Double, Vector> vx = VectorRungeKutta4.Builder.getInstance()
-                .setStepSize(0.0001)
+        // Velocity/Position function
+        Function<Double, Vector> vx = VectorRungeKuttaAdaptive.Builder.getInstance()
+                .setInitialStepSize(0.01)
+                .setLocalTruncationError(1e-9)
                 .build()
-                .solution((vec, tim) -> Vector.mutable(-omega * vec.get(1), vec.get(0)), vxi, ti);
+                .solution((vec, tim) -> Vector.mutable(-omega * omega * vec.get(1), vec.get(0)), vxi, ti);
         // Assert that the position function matches the expected
         for (double time = -10.0; time <= 10.0; time += 0.1) {
             Vector actual = vx.apply(time);
-            System.out.println(time + ", " + actual.get(1));
-//            double expected = xExp.apply(time);
-//            System.out.println(time + ", " + expected);
-//            Assert.assertEquals(actual.get(1), expected, 0.1);
+            double expected = xExp.apply(time);
+            Assert.assertEquals(actual.get(1), expected, 1e-6);
         }
     }
 }
