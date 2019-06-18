@@ -4,23 +4,23 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * Interface that represents a Numerical Method for Solving First Order Ordinary Differential Equations(ODEs).
+ * Interface that represents a Numerical Method for Solving Scalar First Order Ordinary Differential Equations(ODEs).
  */
 public interface ScalarODESolver {
 
     /**
-     * Computations for solving the First Order ODE.
+     * Computations for solving the Scalar First Order ODE.
      *
      * @param ode right-hand side of the first order ode dx/dt(x, t)
      * @param xi  initial condition of the dependent variable
      * @param ti  initial condition of the independent variable
-     * @param t   value of independent variable
+     * @param t   desired value of independent variable
      * @return computed value of x(t)
      */
     double solve(BiFunction<Double, Double, Double> ode, double xi, double ti, double t);
 
     /**
-     * Get the solution function for the ODE.
+     * Get the solution function for the Scalar ODE.
      *
      * @param ode right-hand side of the first order ode dx/dt(x, t)
      * @param xi  initial condition of the dependent variable

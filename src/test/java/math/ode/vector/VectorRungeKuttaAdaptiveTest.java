@@ -42,13 +42,13 @@ public class VectorRungeKuttaAdaptiveTest {
     @Test(dataProvider = "createMotionTests")
     public void testMotion(Function<Double, Vector> xExp, Vector a, Vector vi, Vector xi, double ti) {
         // Velocity function
-        Function<Double, Vector> v = VectorRungeKuttaAdaptive.Builder.getInstance()
+        Function<Double, Vector> v = VectorRungeKuttaAdaptive.Builder.builder()
                 .setInitialStepSize(0.1)
                 .setLocalTruncationError(1e-9)
                 .build()
                 .solution((vel, t) -> a, vi, ti);
         // Position function
-        Function<Double, Vector> x = VectorRungeKuttaAdaptive.Builder.getInstance()
+        Function<Double, Vector> x = VectorRungeKuttaAdaptive.Builder.builder()
                 .setInitialStepSize(0.1)
                 .setLocalTruncationError(1e-9)
                 .build()
@@ -65,13 +65,15 @@ public class VectorRungeKuttaAdaptiveTest {
 
     private static Object[] randomSpringCase(Random rand) {
         // Initial parameters
-        double period = rand.nextDouble() * 5.0 + 5.0;
+        double period = rand.nextDouble() * 10.0 + 0.1;
         double omega = 2.0 * Math.PI / period;
-        double ti = 0.0;
-        double vi = 0.0;
-        double xi = rand.nextDouble() * 2.0 + 0.1;
+        double ti = (rand.nextDouble() - 0.5) * 20.0;
+        double vi = (rand.nextDouble() - 0.5) * 10.0;
+        double xi = (rand.nextDouble() - 0.5) * 10.0;
+        double phi = Math.atan(omega * xi / vi);
+        double A = xi / Math.sin(phi);
         // Expected equation of motion
-        Function<Double, Double> xExp = t -> xi * Math.cos(omega * (t - ti)) + vi * Math.sin(omega * (t - ti));
+        Function<Double, Double> xExp = t -> A * Math.sin(omega * (t - ti) + phi);
         return new Object[]{xExp, omega, xi, vi, ti};
     }
 
@@ -89,7 +91,7 @@ public class VectorRungeKuttaAdaptiveTest {
     public void testSpring(Function<Double, Double> xExp, double omega, double xi, double vi, double ti) {
         Vector vxi = Vector.mutable(vi, xi);
         // Velocity/Position function
-        Function<Double, Vector> vx = VectorRungeKuttaAdaptive.Builder.getInstance()
+        Function<Double, Vector> vx = VectorRungeKuttaAdaptive.Builder.builder()
                 .setInitialStepSize(0.01)
                 .setLocalTruncationError(1e-9)
                 .build()

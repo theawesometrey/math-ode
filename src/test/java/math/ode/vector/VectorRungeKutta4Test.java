@@ -42,12 +42,12 @@ public class VectorRungeKutta4Test {
     @Test(dataProvider = "createMotionTests")
     public void testMotion(Function<Double, Vector> xExp, Vector a, Vector vi, Vector xi, double ti) {
         // Velocity function
-        Function<Double, Vector> v = VectorRungeKutta4.Builder.getInstance()
+        Function<Double, Vector> v = VectorRungeKutta4.Builder.builder()
                 .setStepSize(0.1)
                 .build()
                 .solution((vel, t) -> a, vi, ti);
         // Position function
-        Function<Double, Vector> x = VectorRungeKutta4.Builder.getInstance()
+        Function<Double, Vector> x = VectorRungeKutta4.Builder.builder()
                 .setStepSize(0.1)
                 .build()
                 .solution((xPos, t) -> v.apply(t), xi, ti);
@@ -63,13 +63,15 @@ public class VectorRungeKutta4Test {
 
     private static Object[] randomSpringCase(Random rand) {
         // Initial parameters
-        double period = rand.nextDouble() * 5.0 + 5.0;
+        double period = rand.nextDouble() * 10.0 + 0.1;
         double omega = 2.0 * Math.PI / period;
-        double ti = 0.0;
-        double vi = 0.0;
-        double xi = rand.nextDouble() * 2.0 + 0.1;
+        double ti = (rand.nextDouble() - 0.5) * 20.0;
+        double vi = (rand.nextDouble() - 0.5) * 10.0;
+        double xi = (rand.nextDouble() - 0.5) * 10.0;
+        double phi = Math.atan(omega * xi / vi);
+        double A = xi / Math.sin(phi);
         // Expected equation of motion
-        Function<Double, Double> xExp = t -> xi * Math.cos(omega * (t - ti)) + vi * Math.sin(omega * (t - ti));
+        Function<Double, Double> xExp = t -> A * Math.sin(omega * (t - ti) + phi);
         return new Object[]{xExp, omega, xi, vi, ti};
     }
 
@@ -87,8 +89,8 @@ public class VectorRungeKutta4Test {
     public void testSpring(Function<Double, Double> xExp, double omega, double xi, double vi, double ti) {
         Vector vxi = Vector.mutable(vi, xi);
         // Velocity/Position function
-        Function<Double, Vector> vx = VectorRungeKutta4.Builder.getInstance()
-                .setStepSize(0.0001)
+        Function<Double, Vector> vx = VectorRungeKutta4.Builder.builder()
+                .setStepSize(0.01)
                 .build()
                 .solution((vec, tim) -> Vector.mutable(-omega * omega * vec.get(1), vec.get(0)), vxi, ti);
         // Assert that the position function matches the expected

@@ -2,19 +2,41 @@ package math.ode.scalar;
 
 import java.util.function.BiFunction;
 
-import static math.ode.scalar.RungeKutta4.rk4;
+import static math.ode.scalar.ScalarRungeKutta4.rk4;
 
 /**
- * Adaptive Runge-Kutta Algorithm.
+ * Scalar First Order Adaptive Runge-Kutta Algorithm.
  */
-public class RungeKuttaAdaptive implements ScalarODESolver {
+public class ScalarRungeKuttaAdaptive implements ScalarODESolver {
 
+    /**
+     * Smallest double value to avoid any divide by zero in the error ratio computation.
+     */
     private static final double EPS = Math.ulp(1.0);
 
+    /**
+     * Desired local truncation error.
+     */
     private final double err;
+
+    /**
+     * Initial step size.
+     */
     private final double initialTau;
+
+    /**
+     * Maximum attempts before failing to reach the desired error.
+     */
     private final int maxTry;
+
+    /**
+     * Safety factor 1.
+     */
     private final double safe1;
+
+    /**
+     * Safety factor 2.
+     */
     private final double safe2;
 
     /**
@@ -22,7 +44,7 @@ public class RungeKuttaAdaptive implements ScalarODESolver {
      *
      * @param builder builder to set the parameters
      */
-    private RungeKuttaAdaptive(Builder builder) {
+    private ScalarRungeKuttaAdaptive(Builder builder) {
         this.err = builder.err;
         this.initialTau = builder.initialTau;
         this.maxTry = builder.maxTry;
@@ -67,14 +89,33 @@ public class RungeKuttaAdaptive implements ScalarODESolver {
     }
 
     /**
-     * Builder class for the Adaptive Runge-Kutta class.
+     * Builder class for the Scalar First Order Adaptive Runge-Kutta class.
      */
     public static class Builder {
 
+        /**
+         * Desired local truncation error.
+         */
         private double err;
+
+        /**
+         * Initial step size.
+         */
         private double initialTau;
+
+        /**
+         * Maximum attempts before failing to reach the desired error.
+         */
         private int maxTry;
+
+        /**
+         * Safety factor 1.
+         */
         private double safe1;
+
+        /**
+         * Safety factor 2.
+         */
         private double safe2;
 
         /**
@@ -82,12 +123,12 @@ public class RungeKuttaAdaptive implements ScalarODESolver {
          *
          * @return builder
          */
-        public static Builder getInstance() {
+        public static Builder builder() {
             return new Builder();
         }
 
         /**
-         * Constructor.
+         * Private Constructor.
          */
         private Builder() {
             this.err = 1e-12;
@@ -149,12 +190,12 @@ public class RungeKuttaAdaptive implements ScalarODESolver {
         }
 
         /**
-         * Build the Adaptive Runge-Kutta class with this builder's parameters.
+         * Build the Scalar First Order Adaptive Runge-Kutta class with this builder's parameters.
          *
          * @return rka instance
          */
-        public RungeKuttaAdaptive build() {
-            return new RungeKuttaAdaptive(this);
+        public ScalarRungeKuttaAdaptive build() {
+            return new ScalarRungeKuttaAdaptive(this);
         }
     }
 }

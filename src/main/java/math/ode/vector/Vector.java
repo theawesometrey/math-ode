@@ -8,6 +8,8 @@ import static math.ode.vector.VectorType.MUTABLE;
 
 public class Vector {
 
+    private static final VectorType DEFAULT_TYPE = MUTABLE;
+
     private VectorType type;
     private final double[] x;
 
@@ -84,7 +86,7 @@ public class Vector {
     }
 
     public Vector add(double scalar) {
-        return add(scalar, MUTABLE);
+        return add(scalar, DEFAULT_TYPE);
     }
 
     public Vector add(double scalar, VectorType outType) {
@@ -98,7 +100,7 @@ public class Vector {
     }
 
     public Vector add(Vector vector) {
-        return add(vector, MUTABLE);
+        return add(vector, DEFAULT_TYPE);
     }
 
     public Vector add(Vector vector, VectorType outType) {
@@ -112,7 +114,7 @@ public class Vector {
     }
 
     public Vector sub(double scalar) {
-        return sub(scalar, MUTABLE);
+        return sub(scalar, DEFAULT_TYPE);
     }
 
     public Vector sub(double scalar, VectorType outType) {
@@ -126,7 +128,7 @@ public class Vector {
     }
 
     public Vector sub(Vector vector) {
-        return sub(vector, MUTABLE);
+        return sub(vector, DEFAULT_TYPE);
     }
 
     public Vector sub(Vector vector, VectorType outType) {
@@ -140,7 +142,7 @@ public class Vector {
     }
 
     public Vector mult(double scalar) {
-        return mult(scalar, MUTABLE);
+        return mult(scalar, DEFAULT_TYPE);
     }
 
     public Vector mult(double scalar, VectorType outType) {
@@ -154,7 +156,7 @@ public class Vector {
     }
 
     public Vector mult(Vector vector) {
-        return mult(vector, MUTABLE);
+        return mult(vector, DEFAULT_TYPE);
     }
 
     public Vector mult(Vector vector, VectorType outType) {
@@ -168,7 +170,7 @@ public class Vector {
     }
 
     public Vector div(double scalar) {
-        return div(scalar, MUTABLE);
+        return div(scalar, DEFAULT_TYPE);
     }
 
     public Vector div(double scalar, VectorType outType) {
@@ -182,7 +184,7 @@ public class Vector {
     }
 
     public Vector div(Vector vector) {
-        return div(vector, MUTABLE);
+        return div(vector, DEFAULT_TYPE);
     }
 
     public Vector div(Vector vector, VectorType outType) {
@@ -196,7 +198,7 @@ public class Vector {
     }
 
     public Vector negate() {
-        return abs(MUTABLE);
+        return negate(DEFAULT_TYPE);
     }
 
     public Vector negate(VectorType outType) {
@@ -210,7 +212,7 @@ public class Vector {
     }
 
     public Vector inverse() {
-        return abs(MUTABLE);
+        return inverse(DEFAULT_TYPE);
     }
 
     public Vector inverse(VectorType outType) {
@@ -224,7 +226,7 @@ public class Vector {
     }
 
     public Vector apply(Function<Double, Double> function) {
-        return apply(function, MUTABLE);
+        return apply(function, DEFAULT_TYPE);
     }
 
     public Vector apply(Function<Double, Double> function, VectorType outType) {
@@ -238,7 +240,7 @@ public class Vector {
     }
 
     public Vector scalb(int scale) {
-        return scalb(scale, MUTABLE);
+        return scalb(scale, DEFAULT_TYPE);
     }
 
     public Vector scalb(int scale, VectorType outType) {
@@ -252,7 +254,7 @@ public class Vector {
     }
 
     public Vector pow(double exp) {
-        return pow(exp, MUTABLE);
+        return pow(exp, DEFAULT_TYPE);
     }
 
     public Vector pow(double exp, VectorType outType) {
@@ -266,7 +268,7 @@ public class Vector {
     }
 
     public Vector signum() {
-        return signum(MUTABLE);
+        return signum(DEFAULT_TYPE);
     }
 
     public Vector signum(VectorType outType) {
@@ -280,7 +282,7 @@ public class Vector {
     }
 
     public Vector abs() {
-        return abs(MUTABLE);
+        return abs(DEFAULT_TYPE);
     }
 
     public Vector abs(VectorType outType) {
@@ -294,7 +296,7 @@ public class Vector {
     }
 
     public Vector exp() {
-        return exp(MUTABLE);
+        return exp(DEFAULT_TYPE);
     }
 
     public Vector exp(VectorType outType) {
@@ -308,7 +310,7 @@ public class Vector {
     }
 
     public Vector expm1() {
-        return expm1(MUTABLE);
+        return expm1(DEFAULT_TYPE);
     }
 
     public Vector expm1(VectorType outType) {
@@ -322,7 +324,7 @@ public class Vector {
     }
 
     public Vector log() {
-        return log(MUTABLE);
+        return log(DEFAULT_TYPE);
     }
 
     public Vector log(VectorType outType) {
@@ -336,7 +338,7 @@ public class Vector {
     }
 
     public Vector log10() {
-        return log10(MUTABLE);
+        return log10(DEFAULT_TYPE);
     }
 
     public Vector log10(VectorType outType) {
@@ -350,7 +352,7 @@ public class Vector {
     }
 
     public Vector log1p() {
-        return log1p(MUTABLE);
+        return log1p(DEFAULT_TYPE);
     }
 
     public Vector log1p(VectorType outType) {
@@ -364,7 +366,7 @@ public class Vector {
     }
 
     public Vector cbrt() {
-        return cbrt(MUTABLE);
+        return cbrt(DEFAULT_TYPE);
     }
 
     public Vector cbrt(VectorType outType) {
@@ -378,7 +380,7 @@ public class Vector {
     }
 
     public Vector sqrt() {
-        return sqrt(MUTABLE);
+        return sqrt(DEFAULT_TYPE);
     }
 
     public Vector sqrt(VectorType outType) {
@@ -392,7 +394,7 @@ public class Vector {
     }
 
     public Vector sin() {
-        return sin(MUTABLE);
+        return sin(DEFAULT_TYPE);
     }
 
     public Vector sin(VectorType outType) {
@@ -406,7 +408,7 @@ public class Vector {
     }
 
     public Vector asin() {
-        return asin(MUTABLE);
+        return asin(DEFAULT_TYPE);
     }
 
     public Vector asin(VectorType outType) {
@@ -420,7 +422,7 @@ public class Vector {
     }
 
     public Vector sinh() {
-        return sinh(MUTABLE);
+        return sinh(DEFAULT_TYPE);
     }
 
     public Vector sinh(VectorType outType) {
@@ -434,7 +436,7 @@ public class Vector {
     }
 
     public Vector cos() {
-        return cos(MUTABLE);
+        return cos(DEFAULT_TYPE);
     }
 
     public Vector cos(VectorType outType) {
@@ -448,7 +450,7 @@ public class Vector {
     }
 
     public Vector acos() {
-        return acos(MUTABLE);
+        return acos(DEFAULT_TYPE);
     }
 
     public Vector acos(VectorType outType) {
@@ -462,7 +464,7 @@ public class Vector {
     }
 
     public Vector cosh() {
-        return cosh(MUTABLE);
+        return cosh(DEFAULT_TYPE);
     }
 
     public Vector cosh(VectorType outType) {
@@ -476,7 +478,7 @@ public class Vector {
     }
 
     public Vector tan() {
-        return tan(MUTABLE);
+        return tan(DEFAULT_TYPE);
     }
 
     public Vector tan(VectorType outType) {
@@ -490,7 +492,7 @@ public class Vector {
     }
 
     public Vector atan() {
-        return atan(MUTABLE);
+        return atan(DEFAULT_TYPE);
     }
 
     public Vector atan(VectorType outType) {
@@ -504,7 +506,7 @@ public class Vector {
     }
 
     public Vector tanh() {
-        return tanh(MUTABLE);
+        return tanh(DEFAULT_TYPE);
     }
 
     public Vector tanh(VectorType outType) {
@@ -551,7 +553,7 @@ public class Vector {
 
     public void set(int index, double val) {
         if (type == IMMUTABLE) {
-            throw new IllegalAccessError("The vector is a immutable and cannot be modified.");
+            throw new IllegalAccessError("The vector is immutable and cannot be modified.");
         }
         x[index] = val;
     }

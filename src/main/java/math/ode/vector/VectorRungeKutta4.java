@@ -2,8 +2,14 @@ package math.ode.vector;
 
 import java.util.function.BiFunction;
 
+/**
+ * Vector 4th Order Runge-Kutta Algorithm.
+ */
 public class VectorRungeKutta4 implements VectorODESolver {
 
+    /**
+     * Step size.
+     */
     private final double tau;
 
     /**
@@ -16,10 +22,10 @@ public class VectorRungeKutta4 implements VectorODESolver {
     }
 
     /**
-     * Single step 4th Order Runge-Kutta computation.
+     * Single step Vector 4th Order Runge-Kutta computation.
      *
-     * @param ode right-hand side of first order ode: dx/dt = derivsRK(x, t)
-     * @param x   current value of the dependant variable
+     * @param ode right-hand side of first order ode: dx/dt = ode(x, t)
+     * @param x   current vector of the dependant variable(s)
      * @param t   independent variable
      * @param tau step size
      * @return new value of x after step size tau
@@ -47,10 +53,13 @@ public class VectorRungeKutta4 implements VectorODESolver {
     }
 
     /**
-     * Builder class for the 4th Order Runge-Kutta class.
+     * Builder class for the Vector 4th Order Runge-Kutta class.
      */
     public static class Builder {
 
+        /**
+         * Step size.
+         */
         private double tau;
 
         /**
@@ -58,19 +67,19 @@ public class VectorRungeKutta4 implements VectorODESolver {
          *
          * @return builder
          */
-        public static Builder getInstance() {
+        public static Builder builder() {
             return new Builder();
         }
 
         /**
-         * Constructor.
+         * Private constructor.
          */
         private Builder() {
             this.tau = 0.1;
         }
 
         /**
-         * @param tau initial step size
+         * @param tau step size
          * @return this
          */
         public Builder setStepSize(double tau) {
@@ -80,7 +89,7 @@ public class VectorRungeKutta4 implements VectorODESolver {
         }
 
         /**
-         * Build the 4th Order Runge-Kutta class with this builder's parameters.
+         * Build the Vector 4th Order Runge-Kutta class with this builder's parameters.
          *
          * @return rka instance
          */

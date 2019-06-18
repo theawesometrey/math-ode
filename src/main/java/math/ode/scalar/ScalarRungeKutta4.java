@@ -3,10 +3,13 @@ package math.ode.scalar;
 import java.util.function.BiFunction;
 
 /**
- * 4th Order Runge-Kutta Algorithm.
+ * Scalar 4th Order Runge-Kutta Algorithm.
  */
-public class RungeKutta4 implements ScalarODESolver {
+public class ScalarRungeKutta4 implements ScalarODESolver {
 
+    /**
+     * Step size.
+     */
     private final double tau;
 
     /**
@@ -14,12 +17,12 @@ public class RungeKutta4 implements ScalarODESolver {
      *
      * @param builder builder to set the parameters
      */
-    private RungeKutta4(Builder builder) {
+    private ScalarRungeKutta4(Builder builder) {
         this.tau = builder.tau;
     }
 
     /**
-     * Single step 4th Order Runge-Kutta computation.
+     * Single step Scalar 4th Order Runge-Kutta computation.
      *
      * @param ode right-hand side of first order ode: dx/dt = derivsRK(x, t)
      * @param x   current value of the dependant variable
@@ -49,10 +52,13 @@ public class RungeKutta4 implements ScalarODESolver {
     }
 
     /**
-     * Builder class for the 4th Order Runge-Kutta class.
+     * Builder class for the Scalar 4th Order Runge-Kutta class.
      */
     public static class Builder {
 
+        /**
+         * Step size.
+         */
         private double tau;
 
         /**
@@ -60,12 +66,12 @@ public class RungeKutta4 implements ScalarODESolver {
          *
          * @return builder
          */
-        public static Builder getInstance() {
+        public static Builder builder() {
             return new Builder();
         }
 
         /**
-         * Constructor.
+         * Private Constructor.
          */
         private Builder() {
             this.tau = 0.1;
@@ -82,12 +88,12 @@ public class RungeKutta4 implements ScalarODESolver {
         }
 
         /**
-         * Build the 4th Order Runge-Kutta class with this builder's parameters.
+         * Build the Scalar 4th Order Runge-Kutta class with this builder's parameters.
          *
          * @return rka instance
          */
-        public RungeKutta4 build() {
-            return new RungeKutta4(this);
+        public ScalarRungeKutta4 build() {
+            return new ScalarRungeKutta4(this);
         }
     }
 }

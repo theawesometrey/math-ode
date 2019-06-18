@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class RungeKuttaAdaptiveTest {
+public class ScalarRungeKutta4Test {
 
     @DataProvider
     public Object[][] createSolveTests() {
@@ -28,14 +28,12 @@ public class RungeKuttaAdaptiveTest {
 
     @Test(dataProvider = "createSolveTests")
     public void testSolution(BiFunction<Double, Double, Double> dx, Function<Double, Double> xExp, double xi, double ti) {
-        Function<Double, Double> xAct = RungeKuttaAdaptive.Builder.getInstance()
-                .setLocalTruncationError(1e-12)
-                .setInitialStepSize(0.03)
-                .setMaximumTries(100)
-                .setSafetyFactor1(0.9)
-                .setSafetyFactor2(4.0)
+        // Compute the actual position function
+        Function<Double, Double> xAct = ScalarRungeKutta4.Builder.builder()
+                .setStepSize(0.009)
                 .build()
                 .solution(dx, xi, ti);
+        // Assert that the actual matches the expected
         for (double time = -10.0; time <= 10.0; time += 1.0) {
             double expected = xExp.apply(time);
             double actual = xAct.apply(time);
@@ -67,13 +65,13 @@ public class RungeKuttaAdaptiveTest {
     @Test(dataProvider = "createMotionTests")
     public void testMotion(Function<Double, Double> xExp, double a, double vi, double xi, double ti) {
         // Velocity function
-        Function<Double, Double> v = RungeKuttaAdaptive.Builder.getInstance()
-                .setInitialStepSize(0.1)
+        Function<Double, Double> v = ScalarRungeKutta4.Builder.builder()
+                .setStepSize(0.1)
                 .build()
                 .solution((vel, t) -> a, vi, ti);
         // Position function
-        Function<Double, Double> x = RungeKuttaAdaptive.Builder.getInstance()
-                .setInitialStepSize(0.1)
+        Function<Double, Double> x = ScalarRungeKutta4.Builder.builder()
+                .setStepSize(0.1)
                 .build()
                 .solution((xPos, t) -> v.apply(t), xi, ti);
         // Assert that the position function matches the expected
